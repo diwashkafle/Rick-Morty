@@ -1,10 +1,10 @@
 export interface Character { 
-    id: string 
+    id: number 
     name: string 
-    status: 'alive' | 'dead' | 'unknown'
+    status: 'Alive' | 'Dead' | 'unknown'
     species: string 
     type: string 
-    gender: 'male' | 'female' | 'genderless' | 'unknown'
+    gender: 'Male' | 'Female' | 'Genderless' | 'Unknown'
     origin: Origin
     location : Location
     image: string 
@@ -24,9 +24,19 @@ export interface Location {
 }
 
 export interface ApiResponse {
-    count: number
+   info:{
+     count: number
     pages: number
     next: string | null
     prev: string | null
+   }
     results: Character[]
+}
+
+export interface GetCharactersParams {
+  page?: number;
+  name?: string;
+  status?: 'Alive' | 'Dead' | 'unknown';
+  species?: string;
+  gender?: 'Male' | 'Female' | 'Genderless' | 'unknown';
 }
