@@ -17,7 +17,7 @@ export const getCharacters = async (params : GetCharactersParams) => {
 
     const query = new URLSearchParams();
 
-    const page = params.page || 1;
+    const page = params.currentPage || 1;
     query.append('page', page.toString());
     if(params.deboucedName && params.deboucedName !== 'undefined') query.append('name', params.deboucedName);
     if(params.status && params.status !== 'all' && params.status !== 'undefined') query.append('status', params.status);
