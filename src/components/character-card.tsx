@@ -18,9 +18,9 @@ const CharacterCard = ({
   return (
     <main className="flex flex-col items-center border border-gray-200 rounded-md">
       <section className="py-7 flex flex-col gap-3">
-        <img className="rounded-md" src={image} alt={name} loading="lazy" />
+        <img className="rounded-md" src={image} alt={name}  />
         <h2 className="text-lg font-semibold flex items-center gap-2">
-            {name}
+            {name.length > 20 ? `${name.slice(0, 20)}...` : name}
         <p className="border py-0.5 border-gray-200 flex font-semibold items-center rounded-2xl bg-gray-50 px-3 text-xs text-gray-600">{gender}</p>
         </h2>
         <div className="flex items-center gap-2">
