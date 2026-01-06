@@ -26,13 +26,13 @@ type speciesFilter =
 const FilterDashboard = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [characters, setCharacters] = useState<Character[]>([]);
-  const [currentPage, setCurrentPage] = useState<string | null>(searchParams.get('page') || "1");
   const [totalPage, setTotalPage] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [name, setName] = useState<string>(searchParams.get("name") || "");
   const deboucedName = useDebounce<string>(name, 500);
 
+const currentPage = parseInt(searchParams.get("page") || "1");
   const status = (searchParams.get("status") as statusFilter) || "all";
   const species = (searchParams.get("species") as speciesFilter) || "all";
   const gender = (searchParams.get("gender") as genderFilter) || "all";
@@ -99,6 +99,16 @@ const FilterDashboard = () => {
     searchParams.set("page", "1");
     setSearchParams(searchParams);
   },[deboucedName]);
+
+//   useEffect(()=>{
+//   },[currentPage])
+
+  const handlePaginationButton = (pageNo:number) => {
+       window.scrollTo(0,0)
+
+    searchParams.set("page", pageNo.toString());
+    setSearchParams(searchParams);
+  };
   return (
     <div>
       <section className="flex justify-between gap-10">
@@ -189,6 +199,7 @@ const FilterDashboard = () => {
                   {/* pagination */}
                   {[...Array(totalPage)].map((_, i) => (
                     <button
+                    onClick={()=>handlePaginationButton(i+1)}
                       className="h-10 w-10 border border-gray-200 bg-gray-50"
                       key={i}
                     >
