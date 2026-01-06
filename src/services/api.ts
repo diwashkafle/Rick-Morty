@@ -20,9 +20,9 @@ export const getCharacters = async (params : GetCharactersParams) => {
     const page = params.page || 1;
     query.append('page', page.toString());
     if(params.name) query.append('name', params.name);
-    if(params.status) query.append('status', params.status);
-    if(params.species) query.append('species', params.species);
-    if(params.gender) query.append('gender', params.gender);
+    if(params.status && params.status !== 'all' && params.status !== 'undefined') query.append('status', params.status);
+    if(params.species && params.species !=='all' && params.species !== 'undefined') query.append('species', params.species);
+    if(params.gender && params.gender !=='all' && params.gender !== 'undefined') query.append('gender', params.gender);
     const url = `${BASE_URL}/character?${query.toString()}`;
     return FetchFunction<ApiResponse>(url);
 }
