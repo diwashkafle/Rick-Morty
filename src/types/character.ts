@@ -35,7 +35,7 @@ export interface ApiResponse {
 
 export interface GetCharactersParams {
   page?: number;
-  name?: string;
+  deboucedName?: string;
   status?: 'Alive' | 'Dead' | 'unknown' | 'undefined' | 'all';
   species?: 'Human' | 'Alien' | 'unknown' | 'all' | 'undefined' |'Humanoid' | 'Poopybutthole' | 'Mythological Creature' | 'Animal' | 'Robot' | 'Cronenberg' | 'Disease';
   gender?: 'Male' | 'Female' | 'Genderless' | 'unknown' | 'undefined' | 'all';

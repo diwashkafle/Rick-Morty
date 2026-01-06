@@ -2,6 +2,8 @@ import React, { useEffect, useState } from 'react'
 import type { Character } from '../types/character';
 import CharacterCard from './character-card';
 import { getCharacters } from '../services/api';
+import { useDebounce } from '../hooks/useDebounce';
+import CharacterCardSkeleton from './character-card-loading';
 
 type genderFilter = 'all' | 'Male' | 'Female' | 'Genderless' | 'unknown';
 type statusFilter = 'all' | 'Alive' | 'Dead' | 'unknown' | 'undefined';
@@ -15,25 +17,28 @@ const FilterDashboard = () => {
     const [name, setName] = useState<string>('');
     const [characters, setCharacters] = useState<Character[]>([]);
     const [page, setPage] = useState<number>(1);
-
+    const [loading, setLoading] = useState<boolean>(false);
+    const deboucedName = useDebounce(name, 500);
 
    useEffect(()=>{
      const fetchData = async () => {
        try {
+        setLoading(true);
          const response = await getCharacters({
-            page,name,status,species,gender});
+            page,deboucedName,status,species,gender});
             if(response && response.results.length > 0){
                 setCharacters(response.results);
             }else{
                 console.log('No characters found');
             }
+        setLoading(false);
        } catch (error) {
         throw new Error(error instanceof Error ? error.message : 'Unknown error occurred')
        }
       }
 
     fetchData();
-  },[status, species, gender, name, page])
+  },[status, species, gender, deboucedName, page])
     
    
   return (
@@ -76,8 +81,13 @@ const FilterDashboard = () => {
             </div>
         </section>
         <section className='grid grid-cols-1 sm:grid-col-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
-            {
-            characters && characters.map((character,index)=>{
+            {loading ? (
+                <CharacterCardSkeleton/>
+            ) : (
+                
+           <main>
+             {
+                characters && characters.map((character,index)=>{
                 return <main key={index}>
                     <CharacterCard
                     name={character.name}
@@ -88,7 +98,14 @@ const FilterDashboard = () => {
                     />
                 </main>
             })
-        }
+             }
+
+             <section>
+                
+             </section>
+           </main>
+        
+            )}
         </section>
     </div>
   )

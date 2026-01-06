@@ -19,7 +19,7 @@ export const getCharacters = async (params : GetCharactersParams) => {
 
     const page = params.page || 1;
     query.append('page', page.toString());
-    if(params.name) query.append('name', params.name);
+    if(params.deboucedName && params.deboucedName !== 'undefined') query.append('name', params.deboucedName);
     if(params.status && params.status !== 'all' && params.status !== 'undefined') query.append('status', params.status);
     if(params.species && params.species !=='all' && params.species !== 'undefined') query.append('species', params.species);
     if(params.gender && params.gender !=='all' && params.gender !== 'undefined') query.append('gender', params.gender);
