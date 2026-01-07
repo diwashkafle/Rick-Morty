@@ -5,7 +5,7 @@ import { getCharacters } from "../services/api";
 import { useDebounce } from "../hooks/useDebounce";
 import CharacterCardSkeleton from "./character-card-loading";
 import { FaRegFaceSadCry } from "react-icons/fa6";
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { Pagination } from "./pagination";
 
 type genderFilter = "all" | "Male" | "Female" | "Genderless" | "unknown";
@@ -111,19 +111,19 @@ const currentPage = parseInt(searchParams.get("page") || "1");
   };
   return (
     <div>
-      <section className="flex justify-between gap-10">
+      <section className="flex flex-col sm:flex-row justify-between sm:gap-10">
         <input
           type="text"
           placeholder="Search by name"
           value={name}
           onChange={handleNameChange}
-          className="border border-gray-300 rounded-md p-2 mb-4 outline-none"
+          className="border border-gray-300 text-xs px-2 md:px-4 md:text-base rounded-md p-2 mb-4 outline-none"
         />
         <div className="flex items-center gap-5">
           <select
             value={status}
             onChange={handleStatusChange}
-            className="border justify-center border-gray-300 rounded-md p-2 px-4 w-full mb-4 "
+            className="border justify-center border-gray-300 rounded-md text-xs px-2 md:px-4 md:text-base p-2 w-full mb-4 "
           >
             <option value="all">All Status</option>
             <option value="Alive">Alive</option>
@@ -133,7 +133,7 @@ const currentPage = parseInt(searchParams.get("page") || "1");
           <select
             value={gender}
             onChange={handleGenderChange}
-            className="border border-gray-300 rounded-md p-2 px-4 w-full mb-4"
+            className="border border-gray-300 rounded-md text-xs px-2 md:px-4 md:text-base p-2 w-full mb-4"
           >
             <option value="all">All Gender</option>
             <option value="Male">Male</option>
@@ -144,7 +144,7 @@ const currentPage = parseInt(searchParams.get("page") || "1");
           <select
             value={species}
             onChange={handleSpeciesChange}
-            className="border border-gray-300 rounded-md p-2 px-4 w-full mb-4"
+            className="border border-gray-300 text-xs px-2 md:px-4 md:text-base  rounded-md p-2  w-full mb-4"
           >
             <option value="all">All Species</option>
             <option value="Human">Human</option>
@@ -161,7 +161,7 @@ const currentPage = parseInt(searchParams.get("page") || "1");
       </section>
       <section>
         {loading ? (
-          <section className="grid grid-cols-1 sm:grid-col-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <section className="grid grid-cols-1 sm:grid-col-2 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <CharacterCardSkeleton />
           </section>
         ) : (
@@ -178,11 +178,13 @@ const currentPage = parseInt(searchParams.get("page") || "1");
               </div>
             ) : (
               <main>
+               
                 <section className="grid grid-cols-1 sm:grid-col-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                   {characters &&
                     characters.map((character, index) => {
                       return (
                         <main key={index}>
+                            <Link to={`/characters/${character.id}`}>
                           <CharacterCard
                             name={character.name}
                             image={character.image}
@@ -190,29 +192,14 @@ const currentPage = parseInt(searchParams.get("page") || "1");
                             species={character.species}
                             gender={character.gender}
                           />
+                          </Link>
                         </main>
                       );
                     })}
                 </section>
+               
 
                 <section className="flex justify-center items-center gap-3 mt-6">
-                  {/* pagination */}
-                  {/* {
-                  [...Array(5)].map((_, i) => 
-                   {
-                    const pages = i + currentPage;
-                    if(pages > totalPage) return null;
-                    return (
-                         <button
-                    onClick={()=>handlePaginationButton(i+1)}
-                      className={pages === currentPage ? "bg-blue-500 text-white px-4 py-2 rounded-md" : "border border-gray-300 px-4 py-2 rounded-md"}
-                      key={i}
-                    >
-                      {i + currentPage}
-                    </button>
-                    )
-                   }
-                  )} */}
                   <Pagination totalPages={totalPage} currentPage={currentPage} onPageChange={handlePaginationButton} />
                 </section>
               </main>
