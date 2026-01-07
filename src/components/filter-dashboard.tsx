@@ -5,8 +5,11 @@ import { getCharacters } from "../services/api";
 import { useDebounce } from "../hooks/useDebounce";
 import CharacterCardSkeleton from "./character-card-loading";
 import { FaRegFaceSadCry } from "react-icons/fa6";
-import { Link, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { Pagination } from "./pagination";
+import { BsToggleOn } from "react-icons/bs";
+import { BsToggleOff } from "react-icons/bs";
+import { getFavorites } from "../utils/favorites";
 
 type genderFilter = "all" | "Male" | "Female" | "Genderless" | "unknown";
 type statusFilter = "all" | "Alive" | "Dead" | "unknown" | "undefined";
@@ -27,16 +30,17 @@ type speciesFilter =
 const FilterDashboard = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [characters, setCharacters] = useState<Character[]>([]);
+  const [favCharacters, setFavCharacters] = useState<Character[]>([]);
   const [totalPage, setTotalPage] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [name, setName] = useState<string>(searchParams.get("name") || "");
   const deboucedName = useDebounce<string>(name, 500);
-
-const currentPage = parseInt(searchParams.get("page") || "1");
+  const currentPage = parseInt(searchParams.get("page") || "1");
   const status = (searchParams.get("status") as statusFilter) || "all";
   const species = (searchParams.get("species") as speciesFilter) || "all";
   const gender = (searchParams.get("gender") as genderFilter) || "all";
+  const [isFavButton, setIsFavButton] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -91,39 +95,57 @@ const currentPage = parseInt(searchParams.get("page") || "1");
   };
 
   useEffect(() => {
-    if(deboucedName){
-    searchParams.set("name", deboucedName);
-    searchParams.set("page", "1");
-    setSearchParams(searchParams);
-    }else {
-    searchParams.delete("name");
+    if (deboucedName) {
+      searchParams.set("name", deboucedName);
+      searchParams.set("page", "1");
+      setSearchParams(searchParams);
+    } else {
+      searchParams.delete("name");
     }
-  },[deboucedName]);
+  }, [deboucedName]);
 
-//   useEffect(()=>{
-//   },[currentPage])
 
-  const handlePaginationButton = (pageNo:number | undefined):void => {
-       window.scrollTo(0,0)
-       if(!pageNo) return;
+  const handlePaginationButton = (pageNo: number | undefined): void => {
+    window.scrollTo(0, 0);
+    if (!pageNo) return;
     searchParams.set("page", pageNo.toString());
     setSearchParams(searchParams);
   };
+
+  const handleFavButton = () => {
+    setIsFavButton(!isFavButton);
+    if(isFavButton){
+      const favsId = getFavorites();
+      const filteredFavs = characters.filter(char => favsId.includes(char.id));
+      setFavCharacters(filteredFavs);
+      console.log('fav characters', filteredFavs);
+    }
+  }
   return (
     <div>
-      <section className="flex flex-col sm:flex-row justify-between sm:gap-10">
-        <input
+      <section className="flex flex-col sm:flex-row items-center justify-between sm:gap-10 mb-4">
+        <div className="flex items-center">
+          <input
           type="text"
           placeholder="Search by name"
           value={name}
           onChange={handleNameChange}
-          className="border border-gray-300 text-xs px-2 md:px-4 md:text-base rounded-md p-2 mb-4 outline-none"
+          className="border border-gray-300 h-9 text-xs px-2 md:px-4 md:text-base rounded-md p-2 outline-none"
         />
-        <div className="flex items-center gap-5">
+       <button 
+       onClick={handleFavButton}
+       className={`border gap-1 text-[12px] flex items-center h-9 md:text-base border-gray-300 text-gray-800 px-4 p-2 rounded-md m-2 ${isFavButton ? 'bg-green-100 border-green-400' : 'bg-white hover:bg-gray-100'}`}>
+        Favorites {isFavButton ? <BsToggleOn color="green" size={20}/> : <BsToggleOff size={20}/>}
+       </button>
+        </div>
+
+      
+        <div className="flex items-center gap-1 lg:gap-5">
           <select
+          disabled={isFavButton}
             value={status}
             onChange={handleStatusChange}
-            className="border justify-center border-gray-300 rounded-md text-xs px-2 md:px-4 md:text-base p-2 w-full mb-4 "
+            className="border justify-center border-gray-300 rounded-md text-xs px-2 md:px-4 md:text-base p-2 w-full "
           >
             <option value="all">All Status</option>
             <option value="Alive">Alive</option>
@@ -131,9 +153,10 @@ const currentPage = parseInt(searchParams.get("page") || "1");
             <option value="unknown">Unknown</option>
           </select>
           <select
+          disabled={isFavButton}
             value={gender}
             onChange={handleGenderChange}
-            className="border border-gray-300 rounded-md text-xs px-2 md:px-4 md:text-base p-2 w-full mb-4"
+            className="border border-gray-300 rounded-md text-xs px-2 md:px-4 md:text-base p-2 w-full "
           >
             <option value="all">All Gender</option>
             <option value="Male">Male</option>
@@ -142,9 +165,10 @@ const currentPage = parseInt(searchParams.get("page") || "1");
             <option value="unknown">unknown</option>
           </select>
           <select
+          disabled={isFavButton}
             value={species}
             onChange={handleSpeciesChange}
-            className="border border-gray-300 text-xs px-2 md:px-4 md:text-base  rounded-md p-2  w-full mb-4"
+            className="border border-gray-300 text-xs px-2 md:px-4 md:text-base  rounded-md p-2  w-full"
           >
             <option value="all">All Species</option>
             <option value="Human">Human</option>
@@ -178,30 +202,54 @@ const currentPage = parseInt(searchParams.get("page") || "1");
               </div>
             ) : (
               <main>
-               
                 <section className="grid grid-cols-1 sm:grid-col-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-                  {characters &&
+                 {
+                  !isFavButton ? <>
+                   {characters &&
                     characters.map((character, index) => {
                       return (
                         <main key={index}>
-                            <Link to={`/characters/${character.id}`}>
                           <CharacterCard
+                            id={character.id}
                             name={character.name}
                             image={character.image}
                             status={character.status}
                             species={character.species}
                             gender={character.gender}
                           />
-                          </Link>
                         </main>
                       );
                     })}
+                  </>:<>
+                  {favCharacters &&
+                    favCharacters.map((character, index) => {
+                      return (
+                        <main key={index}>
+                          <CharacterCard
+                            id={character.id}
+                            name={character.name}
+                            image={character.image}
+                            status={character.status}
+                            species={character.species}
+                            gender={character.gender}
+                          />
+                        </main>
+                      );
+                    })}
+                  </>
+                 }
                 </section>
-               
 
-                <section className="flex justify-center items-center gap-3 mt-6">
-                  <Pagination totalPages={totalPage} currentPage={currentPage} onPageChange={handlePaginationButton} />
+                {
+                  !isFavButton && 
+                  <section className="flex justify-center items-center gap-3 mt-6">
+                  <Pagination
+                    totalPages={totalPage}
+                    currentPage={currentPage}
+                    onPageChange={handlePaginationButton}
+                  />
                 </section>
+                }
               </main>
             )}
           </>
