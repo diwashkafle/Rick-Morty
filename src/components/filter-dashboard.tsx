@@ -6,6 +6,7 @@ import { useDebounce } from "../hooks/useDebounce";
 import CharacterCardSkeleton from "./character-card-loading";
 import { FaRegFaceSadCry } from "react-icons/fa6";
 import { useSearchParams } from "react-router-dom";
+import { Pagination } from "./pagination";
 
 type genderFilter = "all" | "Male" | "Female" | "Genderless" | "unknown";
 type statusFilter = "all" | "Alive" | "Dead" | "unknown" | "undefined";
@@ -92,20 +93,19 @@ const currentPage = parseInt(searchParams.get("page") || "1");
   useEffect(() => {
     if(deboucedName){
     searchParams.set("name", deboucedName);
+    searchParams.set("page", "1");
+    setSearchParams(searchParams);
     }else {
     searchParams.delete("name");
     }
-
-    searchParams.set("page", "1");
-    setSearchParams(searchParams);
   },[deboucedName]);
 
 //   useEffect(()=>{
 //   },[currentPage])
 
-  const handlePaginationButton = (pageNo:number) => {
+  const handlePaginationButton = (pageNo:number | undefined):void => {
        window.scrollTo(0,0)
-
+       if(!pageNo) return;
     searchParams.set("page", pageNo.toString());
     setSearchParams(searchParams);
   };
@@ -197,15 +197,23 @@ const currentPage = parseInt(searchParams.get("page") || "1");
 
                 <section className="flex justify-center items-center gap-3 mt-6">
                   {/* pagination */}
-                  {[...Array(totalPage)].map((_, i) => (
-                    <button
+                  {/* {
+                  [...Array(5)].map((_, i) => 
+                   {
+                    const pages = i + currentPage;
+                    if(pages > totalPage) return null;
+                    return (
+                         <button
                     onClick={()=>handlePaginationButton(i+1)}
-                      className="h-10 w-10 border border-gray-200 bg-gray-50"
+                      className={pages === currentPage ? "bg-blue-500 text-white px-4 py-2 rounded-md" : "border border-gray-300 px-4 py-2 rounded-md"}
                       key={i}
                     >
-                      {i + 1}
+                      {i + currentPage}
                     </button>
-                  ))}
+                    )
+                   }
+                  )} */}
+                  <Pagination totalPages={totalPage} currentPage={currentPage} onPageChange={handlePaginationButton} />
                 </section>
               </main>
             )}
