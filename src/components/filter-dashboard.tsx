@@ -44,8 +44,8 @@ const FilterDashboard = () => {
 
   const filterParams = React.useMemo(()=>(
     {
-    currentPage,
-    debouncedName,
+    currentPage:currentPage,
+    debouncedName:debouncedName,
     status: status === 'all' ? undefined : status,
   species: species === 'all' ? undefined : species,
   gender: gender === 'all' ? undefined : gender,
