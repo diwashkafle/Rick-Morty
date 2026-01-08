@@ -1,6 +1,6 @@
 import { TbPointFilled } from "react-icons/tb";
 import { useEffect, useState } from "react";
-import { addFavorite, getFavorites, removeFavorite } from "../utils/favorites";
+import { addFavorite, isFavorite, removeFavorite } from "../utils/favorites";
 import { IoIosHeartEmpty } from "react-icons/io";
 import { IoHeart } from "react-icons/io5";
 import { Link } from "react-router-dom";
@@ -22,29 +22,27 @@ const CharacterCard = ({
   gender,
 }: CharacterCardProps) => {
   const [isFav, setIsFav] = useState<boolean>(false);
-  const [favcharacters, setFavCharacters] = useState<number[]>(() =>
-    getFavorites()
-  );
+
 
   const onFavClick = () => {
     setIsFav(!isFav);
     if (!isFav) {
-      setFavCharacters((prevFavs) => [...prevFavs, id]);
-      addFavorite(id);
+        console.log('inside if(!isFav), value: ',isFav)
+      addFavorite({id,name,image,status,species,gender});
     }
     if (isFav) {
-      setFavCharacters((prevFavs) => prevFavs.filter((favId) => favId !== id));
+        console.log('inside if(isFav), value: ',isFav)
       removeFavorite(id);
     }
   };
 
   useEffect(() => {
     const checkIsFav = () => {
-      setIsFav(favcharacters.includes(id));
+      setIsFav(isFavorite(id));
     };
 
     checkIsFav();
-  });
+  },[id]);
 
   return (
     <main className="flex relative flex-col items-center border border-gray-200 bg-[whitesmoke] p-1 rounded-md">

@@ -53,7 +53,7 @@ const CharacterDetailPage = () => {
             case "Female":
                 return <BsGenderFemale className="text-pink-600" size={14} />;
             case "Genderless":
-                return <FaGenderless className="text-green-600" size={14} />;
+                return <FaGenderless className="text-purple-600" size={25} />;
             default:
                 return <GrStatusUnknown className="text-gray-400" size={14} />;
         }
@@ -199,7 +199,7 @@ const CharacterDetailPage = () => {
                                 {/* Origin */}
                                 <div className="border border-gray-200 rounded-lg p-5">
                                     <div className="flex items-start gap-3">
-                                        <MdPublic className="text-gray-400 mt-0.5 flex-shrink-0" size={20} />
+                                        <MdPublic className="text-gray-400 mt-0.5 hrink-0" size={20} />
                                         <div>
                                             <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
                                                 Origin
@@ -214,7 +214,7 @@ const CharacterDetailPage = () => {
                                 {/* Current Location */}
                                 <div className="border border-gray-200 rounded-lg p-5">
                                     <div className="flex items-start gap-3">
-                                        <MdLocationOn className="text-gray-400 mt-0.5 flex-shrink-0" size={20} />
+                                        <MdLocationOn className="text-gray-400 mt-0.5 shrink-0" size={20} />
                                         <div>
                                             <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
                                                 Last Known Location
@@ -229,7 +229,7 @@ const CharacterDetailPage = () => {
                                 {/* Created Date */}
                                 <div className="border border-gray-200 rounded-lg p-5">
                                     <div className="flex items-start gap-3">
-                                        <FaCalendarAlt className="text-gray-400 mt-0.5 flex-shrink-0" size={20} />
+                                        <FaCalendarAlt className="text-gray-400 mt-0.5 shrink-0" size={20} />
                                         <div>
                                             <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wide mb-1">
                                                 Character Added

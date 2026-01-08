@@ -9,7 +9,7 @@ import { useSearchParams } from "react-router-dom";
 import { Pagination } from "./pagination";
 import { BsToggleOn } from "react-icons/bs";
 import { BsToggleOff } from "react-icons/bs";
-import { getFavorites } from "../utils/favorites";
+import { getFavorites, type CharacterCardProps } from "../utils/favorites";
 
 type genderFilter = "all" | "Male" | "Female" | "Genderless" | "unknown";
 type statusFilter = "all" | "Alive" | "Dead" | "unknown" | "undefined";
@@ -30,7 +30,7 @@ type speciesFilter =
 const FilterDashboard = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [characters, setCharacters] = useState<Character[]>([]);
-  const [favCharacters, setFavCharacters] = useState<Character[]>([]);
+  const [favCharacters, setFavCharacters] = useState<CharacterCardProps[]>(()=> getFavorites());
   const [totalPage, setTotalPage] = useState<number>(0);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -101,6 +101,7 @@ const FilterDashboard = () => {
       setSearchParams(searchParams);
     } else {
       searchParams.delete("name");
+      setSearchParams(searchParams);
     }
   }, [deboucedName]);
 
@@ -113,12 +114,11 @@ const FilterDashboard = () => {
   };
 
   const handleFavButton = () => {
-    setIsFavButton(!isFavButton);
-    if(isFavButton){
-      const favsId = getFavorites();
-      const filteredFavs = characters.filter(char => favsId.includes(char.id));
-      setFavCharacters(filteredFavs);
-      console.log('fav characters', filteredFavs);
+    const favButtonState = !isFavButton;
+    setIsFavButton(favButtonState);
+    if(favButtonState){
+      const favs = getFavorites();  
+      setFavCharacters(favs);
     }
   }
   return (
@@ -126,6 +126,7 @@ const FilterDashboard = () => {
       <section className="flex flex-col sm:flex-row items-center justify-between sm:gap-10 mb-4">
         <div className="flex items-center">
           <input
+          disabled={isFavButton}
           type="text"
           placeholder="Search by name"
           value={name}
@@ -193,12 +194,12 @@ const FilterDashboard = () => {
             {error !== null ? (
               <div className="flex justify-center items-center h-48">
                 <div className="text-gray-500 text-2xl flex gap-2 items-center">
-                  {" "}
-                  <FaRegFaceSadCry />{" "}
+                  <FaRegFaceSadCry />
                   <span>
                     Character not Found or some error occurred try again
                   </span>
                 </div>
+                <button>Reset</button>
               </div>
             ) : (
               <main>
