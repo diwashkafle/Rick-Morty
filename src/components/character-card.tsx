@@ -70,6 +70,8 @@ const CharacterCard = React.memo(
   );
 }
 
-)
+);
+
+CharacterCard.displayName = 'CharacterCard';
 
 export default CharacterCard;

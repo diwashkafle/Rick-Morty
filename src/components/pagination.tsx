@@ -54,4 +54,6 @@ export const Pagination =   React.memo(
    </div>
    )
 }
-)
+);
+
+Pagination.displayName = 'Pagination';

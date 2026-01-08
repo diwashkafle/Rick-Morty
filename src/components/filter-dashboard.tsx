@@ -35,24 +35,28 @@ const FilterDashboard = () => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
   const [name, setName] = useState<string>(searchParams.get("name") || "");
-  const deboucedName = useDebounce<string>(name, 500);
+  const debouncedName = useDebounce<string>(name, 500);
   const currentPage = parseInt(searchParams.get("page") || "1");
   const status = (searchParams.get("status") as statusFilter) || "all";
   const species = (searchParams.get("species") as speciesFilter) || "all";
   const gender = (searchParams.get("gender") as genderFilter) || "all";
   const [isFavButton, setIsFavButton] = useState<boolean>(false);
 
+  const filterParams = React.useMemo(()=>(
+    {
+    currentPage,
+    debouncedName,
+    status: status === 'all' ? undefined : status,
+  species: species === 'all' ? undefined : species,
+  gender: gender === 'all' ? undefined : gender,
+  }
+  ),[currentPage,debouncedName, status, species, gender])
+
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await getCharacters({
-          currentPage,
-          deboucedName,
-          status,
-          species,
-          gender,
-        });
+        const response = await getCharacters(filterParams);
         if (response && response.results.length > 0) {
           setTotalPage(response.info.pages);
           setCharacters(response.results);
@@ -73,7 +77,7 @@ const FilterDashboard = () => {
     };
 
     fetchData();
-  }, [searchParams]);
+  }, [filterParams]);
 
   const handleStatusChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     searchParams.set("status", e.target.value as statusFilter);
@@ -95,23 +99,27 @@ const FilterDashboard = () => {
   };
 
   useEffect(() => {
-    if (deboucedName) {
-      searchParams.set("name", deboucedName);
+    if (debouncedName) {
+      searchParams.set("name", debouncedName);
       searchParams.set("page", "1");
       setSearchParams(searchParams);
     } else {
       searchParams.delete("name");
       setSearchParams(searchParams);
     }
-  }, [deboucedName]);
+  }, [debouncedName,searchParams,setSearchParams]);
 
 
   const handlePaginationButton = useCallback((pageNo: number | undefined): void => {
     window.scrollTo(0, 0);
     if (!pageNo) return;
-    searchParams.set("page", pageNo.toString());
-    setSearchParams(searchParams);
-  },[searchParams,setSearchParams])
+   
+    setSearchParams(prev => {
+      const newParams = new URLSearchParams(prev);
+      newParams.set('page', pageNo.toString())
+      return newParams;
+    })
+  },[setSearchParams])
 
   const handleFavButton = () => {
     const favButtonState = !isFavButton;
@@ -207,10 +215,10 @@ const FilterDashboard = () => {
                  {
                   !isFavButton ? <>
                    {characters &&
-                    characters.map((character, index) => {
+                    characters.map((character) => {
                       return (
-                        <main key={index}>
                           <CharacterCard
+                          key={character.id}
                             id={character.id}
                             name={character.name}
                             image={character.image}
@@ -218,15 +226,15 @@ const FilterDashboard = () => {
                             species={character.species}
                             gender={character.gender}
                           />
-                        </main>
+                      
                       );
                     })}
                   </>:<>
                   {favCharacters &&
-                    favCharacters.map((character, index) => {
+                    favCharacters.map((character) => {
                       return (
-                        <main key={index}>
                           <CharacterCard
+                          key={character.id}
                             id={character.id}
                             name={character.name}
                             image={character.image}
@@ -234,7 +242,6 @@ const FilterDashboard = () => {
                             species={character.species}
                             gender={character.gender}
                           />
-                        </main>
                       ); 
                     })}
                   </>
