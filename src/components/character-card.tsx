@@ -1,19 +1,11 @@
 import { TbPointFilled } from "react-icons/tb";
-import { useEffect, useState } from "react";
-import { addFavorite, isFavorite, removeFavorite } from "../utils/favorites";
-import { IoIosHeartEmpty } from "react-icons/io";
-import { IoHeart } from "react-icons/io5";
+import React from "react";
+import { type CharacterCardProps } from "../utils/favorites";
 import { Link } from "react-router-dom";
-interface CharacterCardProps {
-  id: number;
-  name: string;
-  image: string;
-  status: "Alive" | "Dead" | "unknown";
-  species: string;
-  gender: "Male" | "Female" | "Genderless" | "Unknown";
-}
+import AddToFavButton from "./add-to-fav-button";
 
-const CharacterCard = ({
+const CharacterCard = React.memo(
+    ({
   id,
   name,
   image,
@@ -21,28 +13,6 @@ const CharacterCard = ({
   species,
   gender,
 }: CharacterCardProps) => {
-  const [isFav, setIsFav] = useState<boolean>(false);
-
-
-  const onFavClick = () => {
-    setIsFav(!isFav);
-    if (!isFav) {
-        console.log('inside if(!isFav), value: ',isFav)
-      addFavorite({id,name,image,status,species,gender});
-    }
-    if (isFav) {
-        console.log('inside if(isFav), value: ',isFav)
-      removeFavorite(id);
-    }
-  };
-
-  useEffect(() => {
-    const checkIsFav = () => {
-      setIsFav(isFavorite(id));
-    };
-
-    checkIsFav();
-  },[id]);
 
   return (
     <main className="flex relative flex-col items-center border border-gray-200 bg-[whitesmoke] p-1 rounded-md">
@@ -87,17 +57,19 @@ const CharacterCard = ({
           </p>
         </div>
       </section>
-      <div className="absolute right-2 top-2 cursor-pointer">
-        <button onClick={onFavClick}>
-          {isFav ? (
-            <IoHeart className="text-red-500 text-2xl" />
-          ) : (
-            <IoIosHeartEmpty className="text-2xl" />
-          )}
-        </button>
-      </div>
+      
+       <AddToFavButton
+          id={id}
+          name={name}
+          image={image}
+          status={status}
+          species={species}
+          gender={gender}
+        />
     </main>
   );
-};
+}
+
+)
 
 export default CharacterCard;

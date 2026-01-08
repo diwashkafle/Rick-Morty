@@ -3,9 +3,11 @@ type PaginationProps = {
     currentPage: number;
     onPageChange: (page: number | undefined) => void;
 }
+import React from "react";
 import { FaRegArrowAltCircleLeft, FaRegArrowAltCircleRight } from "react-icons/fa";
 
-export const Pagination =  function ({totalPages, currentPage, onPageChange}: PaginationProps) {
+export const Pagination =   React.memo(
+    ({totalPages, currentPage, onPageChange}: PaginationProps) => {
 
     const currentWindow = Array.from({ length: 5 }, 
         (_, i) =>{
@@ -52,3 +54,4 @@ export const Pagination =  function ({totalPages, currentPage, onPageChange}: Pa
    </div>
    )
 }
+)

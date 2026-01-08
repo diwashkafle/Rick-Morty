@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState } from "react";
 import type { Character } from "../types/character";
 import CharacterCard from "./character-card";
 import { getCharacters } from "../services/api";
@@ -106,12 +106,12 @@ const FilterDashboard = () => {
   }, [deboucedName]);
 
 
-  const handlePaginationButton = (pageNo: number | undefined): void => {
+  const handlePaginationButton = useCallback((pageNo: number | undefined): void => {
     window.scrollTo(0, 0);
     if (!pageNo) return;
     searchParams.set("page", pageNo.toString());
     setSearchParams(searchParams);
-  };
+  },[searchParams,setSearchParams])
 
   const handleFavButton = () => {
     const favButtonState = !isFavButton;
@@ -203,7 +203,7 @@ const FilterDashboard = () => {
               </div>
             ) : (
               <main>
-                <section className="grid grid-cols-1 sm:grid-col-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-5 gap-4">
                  {
                   !isFavButton ? <>
                    {characters &&
@@ -235,7 +235,7 @@ const FilterDashboard = () => {
                             gender={character.gender}
                           />
                         </main>
-                      );
+                      ); 
                     })}
                   </>
                  }
