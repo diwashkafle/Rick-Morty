@@ -3,11 +3,11 @@ const CharacterCardSkeleton = () => {
   <>
    {
     [...Array(20)].map((_, i) => (
-         <main key={i} className="flex flex-col items-center border border-gray-200 rounded-md">
+         <main key={i} className="flex flex-col items-center justify-center border border-gray-200 rounded-md">
       <section className="py-7 flex flex-col gap-3 w-full px-4">
         
         {/* Image / banner placeholder */}
-        <div className="rounded-md w-75 h-40 bg-gray-200 animate-pulse" />
+        <div className="rounded-md w-70 h-40 bg-gray-200 animate-pulse" />
 
         {/* Title + badge */}
         <h2 className="flex items-center gap-2">
