@@ -207,7 +207,6 @@ const FilterDashboard = () => {
                     Character not Found or some error occurred try again
                   </span>
                 </div>
-                <button>Reset</button>
               </div>
             ) : (
               <main>
@@ -230,7 +229,7 @@ const FilterDashboard = () => {
                       );
                     })}
                   </>:<>
-                  {favCharacters &&
+                  {favCharacters.length>0 &&
                     favCharacters.map((character) => {
                       return (
                           <CharacterCard
@@ -243,10 +242,15 @@ const FilterDashboard = () => {
                             gender={character.gender}
                           />
                       ); 
-                    })}
+                    })
+                  }
                   </>
                  }
                 </section>
+                {
+                  isFavButton && favCharacters.length === 0 && 
+                  <h1 className="flex w-full items-center justify-center mt-20 gap-2 text-2xl text-gray-500 font-semibold"> <FaRegFaceSadCry/>  No favorites characters Found.</h1>
+                 }
 
                 {
                   !isFavButton && 
