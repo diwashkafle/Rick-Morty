@@ -15,7 +15,7 @@ const CharacterCard = React.memo(
 }: CharacterCardProps) => {
 
   return (
-    <main className="flex  xl:w-75 relative flex-col items-center border border-gray-200 bg-[whitesmoke] p-1 rounded-md">
+    <main className="flex lg:w-80 xl:w-75 relative flex-col items-center border border-gray-200 bg-[whitesmoke] p-1 rounded-md">
       <section className="py-7 flex flex-col gap-3">
         <img
           className="rounded-md w-48 h-48 sm:w-64 sm:h-64"
