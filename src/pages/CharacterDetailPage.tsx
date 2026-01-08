@@ -12,6 +12,7 @@ import { FaCalendarAlt } from "react-icons/fa";
 import AddToFavButton from "../components/add-to-fav-button";
 
 const CharacterDetailPage = () => {
+  window.scrollTo(0,0);
   const { id } = useParams<{ id: string }>();
   const [responseCharacter, setResponseCharacter] = useState<Character | null>(
     null
