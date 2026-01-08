@@ -186,8 +186,4 @@ This project follows best practices:
 
 **Diwash Kafle** 
 
-## 📄 License
-
-This project was created as part of a technical assessment for LQ Digital.
-
 ---
